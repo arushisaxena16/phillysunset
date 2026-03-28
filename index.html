@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>shreya's philly sunset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --text: #2c2420;
+    --text-mid: #504440;
+    --text-soft: #6e6259;
+    --text-faint: #8a7f77;
+    --glass: rgba(255,255,255,0.55);
+    --glass-border: rgba(255,255,255,0.45);
+    --accent: #b5654d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text);
+    background: #ddd0c4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Full-page layout ── */
+  .page {
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    padding: 2.2rem 3.5rem 2rem;
+    position: relative;
+    transition: background 1.5s ease;
+  }
+  @media (max-width: 700px) {
+    .page { padding: 1.5rem 1.8rem 1.5rem; }
+  }
+
+  /* Ambient light wash */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(255,255,255,0.2) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 90%, rgba(0,0,0,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    z-index: 2;
+    padding-bottom: 0;
+  }
+  .header-left {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-mid);
+    letter-spacing: 0.02em;
+  }
+  .header-right {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Hero center ── */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    text-align: center;
+    gap: 0;
+  }
+  .hero-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    font-weight: 400;
+    margin-bottom: 1.2rem;
+  }
+  .score-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    cursor: default;
+    line-height: 1;
+  }
+  .score-big {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(7rem, 18vw, 12rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--text);
+  }
+  .score-dec {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(7rem, 18vw, 12rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--text);
+  }
+  .score-of {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--text);
+    margin-left: 0.15em;
+    position: relative;
+    top: -0.05em;
+  }
+
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-mid);
+    margin-top: 0.8rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* Narrative — revealed on hover */
+  .narrative-zone {
+    margin-top: 1.4rem;
+    position: relative;
+    height: 2.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+  .narrative-hint {
+    font-size: 0.7rem;
+    color: var(--text-soft);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    transition: opacity 0.4s ease;
+  }
+  .narrative-text {
+    position: absolute;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-mid);
+    font-weight: 300;
+    max-width: 500px;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .hero:hover .narrative-hint { opacity: 0; }
+  .hero:hover .narrative-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Week strip ── */
+  .week-strip {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: clamp(1.2rem, 3.5vw, 2.8rem);
+    z-index: 2;
+    padding: 0.6rem 0 2rem;
+  }
+  .day-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+  }
+  .day-name {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+  .day-dot {
+    width: clamp(18px, 2.8vw, 26px);
+    height: clamp(18px, 2.8vw, 26px);
+    border-radius: 50%;
+    cursor: default;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+  }
+  .day-dot:hover { transform: scale(1.5); }
+  .day-dot.is-today { box-shadow: 0 0 0 2px var(--text); }
+  .day-dot.is-best { box-shadow: 0 0 0 2px var(--accent); }
+  .day-dot.is-today.is-best { box-shadow: 0 0 0 2px var(--accent), 0 0 0 6px rgba(196,122,90,0.1); }
+  .day-num {
+    font-size: 0.62rem;
+    color: var(--text-mid);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .day-num.is-best { color: var(--accent); font-weight: 500; }
+
+  /* Tooltip on day hover */
+  .day-tip {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.55rem 0.85rem;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    color: var(--text-mid);
+    font-weight: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    z-index: 10;
+    line-height: 1.5;
+  }
+  .day-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--glass);
+  }
+  .day-col:hover .day-tip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+  }
+
+  .foot-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .foot-time {
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.55;
+  }
+  .foot-time strong {
+    font-weight: 500;
+    color: var(--text-mid);
+  }
+
+  .foot-right {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.4rem;
+  }
+
+  /* Hover-link triggers */
+  .hover-trigger {
+    position: relative;
+    cursor: default;
+  }
+  .hover-label {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-soft);
+    border-bottom: 1px dotted var(--text-soft);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .hover-trigger:hover .hover-label { color: var(--text); }
+
+  /* Popover panel */
+  .panel {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 1.1rem 1.4rem;
+    min-width: 250px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+    z-index: 20;
+  }
+  .panel-left { left: 0; }
+  .panel-right { right: 0; }
+  .hover-trigger:hover .panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .panel-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 400;
+    margin-bottom: 0.65rem;
+  }
+  .panel-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.28rem 0;
+    font-size: 0.76rem;
+    border-bottom: 1px solid rgba(0,0,0,0.035);
+  }
+  .panel-row:last-child { border-bottom: none; }
+  .panel-k { color: var(--text-soft); font-weight: 300; }
+  .panel-v { color: var(--text-mid); font-weight: 400; font-variant-numeric: tabular-nums; text-align: right; }
+
+  .panel-spot-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .panel-spot-why {
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-weight: 300;
+  }
+
+  /* Reason rows (in why panel) */
+  .reason-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.45;
+  }
+  .reason-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-faint);
+    flex-shrink: 0;
+    margin-top: 0.4em;
+  }
+
+  .made-with {
+    font-size: 0.62rem;
+    color: var(--text-faint);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  /* ── Loading ── */
+  .loading-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(170deg, #e8ddd3 0%, #ddd0c4 50%, #cdd2d4 100%);
+    gap: 1.5rem;
+  }
+  .loading-dots { display: flex; gap: 6px; }
+  .loading-dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--text-soft);
+    animation: ldot 1.4s ease-in-out infinite;
+  }
+  .loading-dot:nth-child(2) { animation-delay: 0.15s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes ldot {
+    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+  }
+  .loading-label {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    animation: lpulse 2.5s ease-in-out infinite;
+  }
+  @keyframes lpulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.8; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="loading-page">
+    <div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>
+    <span class="loading-label">reading the sky for shreya</span>
+  </div>
+</div>
+
+<script>
+const LAT = 39.9526, LON = -75.1652;
+
+const SPOTS = [
+  { name: "south street bridge", why: "wide open western view over the schuylkill", min: 0 },
+  { name: "the art museum steps", why: "elevated with the skyline behind you", min: 5 },
+  { name: "spruce street harbor park", why: "water doubles the colors", min: 6 },
+  { name: "belmont plateau", why: "highest point in fairmount park — panoramic", min: 7 },
+  { name: "schuylkill river trail", why: "walk west and the whole sky opens up", min: 0 },
+  { name: "race street pier", why: "industrial backdrop meets big sky", min: 4 },
+  { name: "any west-facing window", why: "tonight the sky does the work for you", min: 8 },
+  { name: "your rooftop", why: "even a sliver of sky will glow", min: 9 },
+];
+
+const DAYS = ['sun','mon','tue','wed','thu','fri','sat'];
+const MONTHS = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+/* ── Scoring ── */
+function scoreSunset(w, aq) {
+  const midHigh = (w.cloudMid + w.cloudHigh) / 2;
+  let cc;
+  if (midHigh >= 30 && midHigh <= 70) cc = 10;
+  else if (midHigh >= 20 && midHigh <= 80) cc = 7;
+  else if (midHigh < 10) cc = 3;
+  else if (midHigh > 90) cc = 2;
+  else cc = 5;
+
+  let hz;
+  if (w.cloudLow <= 15) hz = 10;
+  else if (w.cloudLow <= 30) hz = 7;
+  else if (w.cloudLow <= 50) hz = 5;
+  else if (w.cloudLow <= 70) hz = 3;
+  else hz = 1;
+
+  let sc = 5;
+  const aod = aq.aod || 0;
+  if (aod >= 0.08 && aod <= 0.35) sc += 2;
+  else if (aod > 0.5) sc -= 2;
+  const pm = aq.pm25 || 0;
+  if (pm >= 4 && pm <= 18) sc += 1.5;
+  else if (pm > 35) sc -= 2;
+  if (w.humidity >= 40 && w.humidity <= 65) sc += 1.5;
+  sc = Math.max(0, Math.min(10, sc));
+
+  let rn = w.precip <= 0 ? 10 : (w.precip < 0.5 ? 4 : 0);
+
+  let dr = 5;
+  if (w.pressureChange > 0.5) dr += 2;
+  if (w.pressureChange > 2) dr += 1;
+  if (w.visibility >= 15 && w.visibility <= 45) dr += 1;
+  if (w.visibility < 5) dr -= 2;
+  dr = Math.max(0, Math.min(10, dr));
+
+  const raw = cc * 0.30 + hz * 0.25 + sc * 0.20 + rn * 0.15 + dr * 0.10;
+  return Math.min(10, Math.max(0, Math.round(raw * 10) / 10));
+}
+
+function scoreForecastDay(d) {
+  const c = d.cloud || 50;
+  let cs;
+  if (c >= 25 && c <= 65) cs = 8;
+  else if (c >= 15 && c <= 80) cs = 6;
+  else cs = 3;
+  let rs = (d.precip || 0) <= 0 ? 9 : 2;
+  return Math.round((cs * 0.5 + rs * 0.35 + 6 * 0.15) * 10) / 10;
+}
+
+/* ── Narrative ── */
+function narrative(score, w, aq) {
+  const parts = [];
+  if (w.precip > 0.5)
+    parts.push("rain's in the forecast — the sky is keeping its cards close tonight");
+  else if (w.pressureChange > 1)
+    parts.push("pressure climbing after recent lows — that's the recipe for drama");
+  else if (w.cloudMid + w.cloudHigh > 50 && w.cloudLow < 20)
+    parts.push("high clouds with clear skies below — the canvas is set");
+  else if (w.cloudLow > 60)
+    parts.push("low clouds hugging the horizon might block the show");
+  else if (w.cloudMid + w.cloudHigh < 10 && w.cloudLow < 10)
+    parts.push("almost clear — sunsets need clouds to catch light, so tonight may be understated");
+  else if (score >= 7)
+    parts.push("conditions aligning nicely — the kind of evening where you pause mid-step");
+  else if (score >= 5)
+    parts.push("a mix tonight — some color is likely, no guarantees");
+  else
+    parts.push("not the sky's best day, but it surprises us sometimes");
+
+  const aod = aq.aod || 0;
+  if (aod >= 0.1 && aod <= 0.3)
+    parts.push("just enough haze to scatter warm light");
+  else if (aod > 0.4)
+    parts.push("heavy haze might muddy the colors");
+
+  return parts.join(". ") + ".";
+}
+
+function reasons(score, w, aq) {
+  const r = [];
+  const mh = w.cloudMid + w.cloudHigh;
+  if (mh >= 30 && mh <= 70) r.push(`mid & high clouds at ${Math.round(mh)}% — wide canvas for color`);
+  else if (mh > 70) r.push(`cloud cover at ${Math.round(mh)}% — may be too thick`);
+  else if (mh < 10) r.push("almost no high clouds to catch light");
+  if (w.cloudLow > 50) r.push(`low clouds at ${Math.round(w.cloudLow)}% blocking the horizon`);
+  else if (w.cloudLow <= 15) r.push("clear western horizon — clean exit for the sun");
+  if (w.pressureChange > 1) r.push("pressure rising — clearing skies");
+  else if (w.pressureChange < -1) r.push("pressure falling — system moving in");
+  if ((aq.aod || 0) >= 0.08 && (aq.aod || 0) <= 0.3) r.push("light haze scattering warm tones");
+  if (w.precip > 0) r.push("precipitation blocking the view");
+  else r.push("dry skies — no rain in the way");
+  if (w.humidity >= 40 && w.humidity <= 65) r.push("moderate humidity adding depth to colors");
+  return r.slice(0, 4);
+}
+
+/* ── Colors ── */
+function gradient(score, w, aq) {
+  const aod = aq.aod || 0;
+  if (score >= 8.5) return aod > 0.2
+    ? ['#d4826a','#c46858','#a87cb8']
+    : ['#e8a87c','#d4826a','#b89cc8'];
+  if (score >= 7) return ['#e2b08e','#d49878','#baacc8'];
+  if (score >= 5.5) return w.humidity > 60
+    ? ['#dcc0b0','#ccaa96','#b0bcc8']
+    : ['#e2cab0','#d4b498','#b4bcc8'];
+  if (score >= 4) return ['#ddd0c4','#cec2b8','#bcc4ce'];
+  return w.precip > 0
+    ? ['#c8c6ca','#b4b4be','#a8aeb8']
+    : ['#d4cec6','#c4bcba','#b8bcc6'];
+}
+
+function dotColor(s) {
+  if (s >= 8) return '#c46858';
+  if (s >= 6.5) return '#d4826a';
+  if (s >= 5) return '#d4a888';
+  if (s >= 3.5) return '#c4b8ae';
+  return '#b4b4ba';
+}
+
+function label(s) {
+  if (s >= 9) return "stop everything and go outside";
+  if (s >= 7.5) return "the sky's feeling generous";
+  if (s >= 6) return "decent colors on the menu";
+  if (s >= 4) return "a quiet sky tonight";
+  if (s >= 2) return "don't get your hopes up";
+  return "maybe tomorrow";
+}
+
+function pickSpot(s) {
+  const ok = SPOTS.filter(x => s >= x.min);
+  return ok[Math.floor(Math.random() * ok.length)] || SPOTS[0];
+}
+
+/* ── Helpers ── */
+function windDir(d) { return ['N','NE','E','SE','S','SW','W','NW'][Math.round(d / 45) % 8]; }
+function fmtTime(d) { return d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'America/New_York' }).toLowerCase(); }
+function countdown(t) {
+  if (!t || isNaN(t.getTime())) return null;
+  const d = t - new Date();
+  if (d <= 0) return null;
+  const h = Math.floor(d / 36e5), m = Math.floor((d % 36e5) / 6e4);
+  return h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+}
+
+/* ── Fetch ── */
+async function fetchAll() {
+  const [sunR, wR, aqR] = await Promise.all([
+    fetch(`https://api.sunrise-sunset.org/json?lat=${LAT}&lng=${LON}&date=today&formatted=0`),
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation,surface_pressure,dew_point_2m&daily=cloud_cover_mean,precipitation_sum,sunset&timezone=America/New_York&forecast_days=7`),
+    fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${LAT}&longitude=${LON}&hourly=pm2_5,pm10,nitrogen_dioxide,aerosol_optical_depth&timezone=America/New_York&forecast_days=1`)
+  ]);
+  const [sunD, wD, aqD] = await Promise.all([sunR.json(), wR.json(), aqR.json()]);
+
+  const sunsetTime = new Date(sunD.results.sunset);
+  const ghRaw = sunD.results.golden_hour;
+  const goldenHour = ghRaw ? new Date(ghRaw) : null;
+  const sh = sunsetTime.getHours();
+  const ht = wD.hourly.time;
+  let si = ht.findIndex(t => t.includes(`T${String(sh).padStart(2,'0')}:`));
+  if (si === -1) si = sh;
+
+  const pN = wD.hourly.surface_pressure[si] || 1013;
+  const pE = wD.hourly.surface_pressure[Math.max(0, si - 3)] || pN;
+  const ai = Math.min(si, (aqD.hourly?.time?.length || 1) - 1);
+
+  return {
+    w: {
+      cloudLow: wD.hourly.cloud_cover_low[si] || 0,
+      cloudMid: wD.hourly.cloud_cover_mid[si] || 0,
+      cloudHigh: wD.hourly.cloud_cover_high[si] || 0,
+      visibility: (wD.hourly.visibility[si] || 20000) / 1000,
+      windSpeed: wD.hourly.wind_speed_10m[si] || 0,
+      windDir: wD.hourly.wind_direction_10m[si] || 0,
+      humidity: wD.hourly.relative_humidity_2m[si] || 50,
+      precip: wD.hourly.precipitation[si] || 0,
+      pressure: pN,
+      pressureChange: pN - pE,
+      dewPoint: wD.hourly.dew_point_2m[si] || 10,
+    },
+    aq: {
+      pm25: aqD.hourly?.pm2_5?.[ai] || 0,
+      pm10: aqD.hourly?.pm10?.[ai] || 0,
+      no2: aqD.hourly?.nitrogen_dioxide?.[ai] || 0,
+      aod: aqD.hourly?.aerosol_optical_depth?.[ai] || 0,
+    },
+    sunsetTime,
+    goldenHour,
+    forecast: wD.daily.time.map((d, i) => ({
+      date: new Date(d + 'T12:00:00'),
+      cloud: wD.daily.cloud_cover_mean?.[i] ?? 50,
+      precip: wD.daily.precipitation_sum?.[i] ?? 0
+    }))
+  };
+}
+
+/* ── Render ── */
+function render(data) {
+  const { w, aq, sunsetTime, goldenHour, forecast } = data;
+  const score = scoreSunset(w, aq);
+  const colors = gradient(score, w, aq);
+  const now = new Date();
+  const dateStr = `${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const sW = Math.floor(score), sD = Math.round((score - sW) * 10);
+  const spot = pickSpot(score);
+
+  // Countdown
+  const gc = countdown(goldenHour), sc = countdown(sunsetTime);
+  let timeHTML;
+  if (gc) timeHTML = `golden hour in <strong>${gc}</strong> &middot; sunset at <strong>${fmtTime(sunsetTime)}</strong>`;
+  else if (sc) timeHTML = `sunset in <strong>${sc}</strong>`;
+  else timeHTML = `sunset was at <strong>${fmtTime(sunsetTime)}</strong>`;
+
+  // Week
+  const weeks = forecast.map(d => ({ ...d, score: scoreForecastDay(d) }));
+  const bestI = weeks.reduce((b, d, i) => d.score > weeks[b].score ? i : b, 0);
+
+  const whyRows = reasons(score, w, aq);
+
+  document.getElementById('app').innerHTML = `
+    <div class="page" style="background:linear-gradient(170deg,${colors[0]} 0%,${colors[1]} 50%,${colors[2]} 100%)">
+
+      <div class="header">
+        <span class="header-left">shreya's philly sunset</span>
+        <span class="header-right">${dateStr}</span>
+      </div>
+
+      <div class="hero">
+        <div class="hero-label">tonight's forecast</div>
+        <div class="score-row">
+          <span class="score-big">${sW}</span><span class="score-dec">.${sD}</span><span class="score-of">/10</span>
+        </div>
+        <div class="tagline">${label(score)}</div>
+        <div class="narrative-zone">
+          <span class="narrative-hint">hover for the full story</span>
+          <p class="narrative-text">${narrative(score, w, aq)}</p>
+        </div>
+      </div>
+
+      <div class="week-strip">
+        ${weeks.map((d, i) => {
+          const dow = d.date.getDay();
+          const isToday = d.date.toDateString() === now.toDateString();
+          const isBest = i === bestI;
+          const tipR = d.precip > 0 ? `${d.precip.toFixed(1)} mm rain` : 'no rain';
+          return `
+          <div class="day-col">
+            <div class="day-tip">
+              <strong>${d.score}/10</strong> &middot; ${Math.round(d.cloud)}% clouds &middot; ${tipR}
+              ${isBest ? '<br>best sunset this week' : ''}
+            </div>
+            <span class="day-name">${DAYS[dow]}</span>
+            <div class="day-dot ${isToday ? 'is-today' : ''} ${isBest ? 'is-best' : ''}" style="background:${dotColor(d.score)}"></div>
+            <span class="day-num ${isBest ? 'is-best' : ''}">${d.score}</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="footer">
+        <div class="foot-left">
+          <div class="hover-trigger">
+            <div class="panel panel-left">
+              <div class="panel-title">why tonight looks ${score >= 6 ? 'good' : score >= 4 ? 'okay' : 'tough'}</div>
+              ${whyRows.map(r => `<div class="reason-row"><span class="reason-dot"></span><span>${r}</span></div>`).join('')}
+            </div>
+            <span class="hover-label">why this score?</span>
+          </div>
+          <div class="foot-time" id="cd">${timeHTML}</div>
+        </div>
+
+        <div class="foot-right">
+          <div class="hover-trigger">
+            <div class="panel panel-right">
+              <div class="panel-title">where to watch tonight</div>
+              <div class="panel-spot-name">${spot.name}</div>
+              <div class="panel-spot-why">${spot.why}</div>
+            </div>
+            <span class="hover-label">tonight's spot</span>
+          </div>
+
+          <div class="hover-trigger">
+            <div class="panel panel-right" style="min-width:280px">
+              <div class="panel-title">conditions at sunset</div>
+              <div class="panel-row"><span class="panel-k">low clouds</span><span class="panel-v">${Math.round(w.cloudLow)}%</span></div>
+              <div class="panel-row"><span class="panel-k">mid clouds</span><span class="panel-v">${Math.round(w.cloudMid)}%</span></div>
+              <div class="panel-row"><span class="panel-k">high clouds</span><span class="panel-v">${Math.round(w.cloudHigh)}%</span></div>
+              <div class="panel-row"><span class="panel-k">visibility</span><span class="panel-v">${w.visibility.toFixed(1)} km</span></div>
+              <div class="panel-row"><span class="panel-k">humidity</span><span class="panel-v">${Math.round(w.humidity)}%</span></div>
+              <div class="panel-row"><span class="panel-k">dew point</span><span class="panel-v">${w.dewPoint.toFixed(1)}&deg;C</span></div>
+              <div class="panel-row"><span class="panel-k">wind</span><span class="panel-v">${w.windSpeed.toFixed(1)} km/h ${windDir(w.windDir)}</span></div>
+              <div class="panel-row"><span class="panel-k">precipitation</span><span class="panel-v">${w.precip} mm/h</span></div>
+              <div class="panel-row"><span class="panel-k">pressure</span><span class="panel-v">${w.pressure.toFixed(1)} hPa</span></div>
+              <div class="panel-row"><span class="panel-k">pressure trend</span><span class="panel-v">${w.pressureChange > 0 ? '+' : ''}${w.pressureChange.toFixed(1)} hPa</span></div>
+              <div class="panel-row"><span class="panel-k">PM2.5</span><span class="panel-v">${aq.pm25.toFixed(1)} &micro;g/m&sup3;</span></div>
+              <div class="panel-row"><span class="panel-k">aerosol depth</span><span class="panel-v">${aq.aod.toFixed(3)}</span></div>
+            </div>
+            <span class="hover-label">nerd out</span>
+          </div>
+        </div>
+      </div>
+
+      <span class="made-with">made with &hearts; for shreya</span>
+    </div>`;
+
+  // Live countdown
+  setInterval(function() {
+    var el = document.getElementById('cd');
+    if (!el) return;
+    var g = countdown(goldenHour), s = countdown(sunsetTime);
+    if (g) el.innerHTML = 'golden hour in <strong>' + g + '</strong> &middot; sunset at <strong>' + fmtTime(sunsetTime) + '</strong>';
+    else if (s) el.innerHTML = 'sunset in <strong>' + s + '</strong>';
+    else el.innerHTML = 'sunset was at <strong>' + fmtTime(sunsetTime) + '</strong>';
+  }, 30000);
+}
+
+async function init() {
+  try {
+    const data = await fetchAll();
+    render(data);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('app').innerHTML = '<div class="loading-page"><p style="color:var(--text-mid);font-size:0.9rem;font-weight:300">couldn\'t reach the sky data — try refreshing</p><p style="color:var(--text-soft);font-size:0.75rem;font-weight:300">' + e.message + '</p></div>';
+  }
+}
+init();
+</script>
+</body>
+</html>
