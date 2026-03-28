@@ -135,7 +135,7 @@
     letter-spacing: 0.01em;
   }
 
-  /* Narrative ‚Äî revealed on hover, sits right under tagline */
+  /* Narrative -revealed on hover, sits right under tagline */
   .narrative-zone {
     margin-top: 0.6rem;
     position: relative;
@@ -437,7 +437,7 @@ const SPOTS = [
   { name: "south street bridge", why: "wide open western view over the schuylkill", min: 0 },
   { name: "the art museum steps", why: "elevated with the skyline behind you", min: 5 },
   { name: "spruce street harbor park", why: "water doubles the colors", min: 6 },
-  { name: "belmont plateau", why: "highest point in fairmount park ‚Äî panoramic", min: 7 },
+  { name: "belmont plateau", why: "highest point in fairmount park -panoramic", min: 7 },
   { name: "schuylkill river trail", why: "walk west and the whole sky opens up", min: 0 },
   { name: "race street pier", why: "industrial backdrop meets big sky", min: 4 },
   { name: "any west-facing window", why: "tonight the sky does the work for you", min: 8 },
@@ -501,19 +501,19 @@ function scoreForecastDay(d) {
 function narrative(score, w, aq) {
   const parts = [];
   if (w.precip > 0.5)
-    parts.push("rain's in the forecast ‚Äî the sky is keeping its cards close tonight");
+    parts.push("rain's in the forecast, so the sky is keeping its cards close tonight");
   else if (w.pressureChange > 1)
-    parts.push("pressure climbing after recent lows ‚Äî that's the recipe for drama");
+    parts.push("pressure climbing after recent lows. that's the recipe for drama");
   else if (w.cloudMid + w.cloudHigh > 50 && w.cloudLow < 20)
-    parts.push("high clouds with clear skies below ‚Äî the canvas is set");
+    parts.push("high clouds with clear skies below. the canvas is set");
   else if (w.cloudLow > 60)
     parts.push("low clouds hugging the horizon might block the show");
   else if (w.cloudMid + w.cloudHigh < 10 && w.cloudLow < 10)
-    parts.push("almost clear ‚Äî sunsets need clouds to catch light, so tonight may be understated");
+    parts.push("almost clear skies. sunsets need clouds to catch light, so tonight may be understated");
   else if (score >= 7)
-    parts.push("conditions aligning nicely ‚Äî the kind of evening where you pause mid-step");
+    parts.push("conditions aligning nicely. the kind of evening where you pause mid-step");
   else if (score >= 5)
-    parts.push("a mix tonight ‚Äî some color is likely, no guarantees");
+    parts.push("a mix tonight. some color is likely, no guarantees");
   else
     parts.push("not the sky's best day, but it surprises us sometimes");
 
@@ -529,16 +529,16 @@ function narrative(score, w, aq) {
 function reasons(score, w, aq) {
   const r = [];
   const mh = w.cloudMid + w.cloudHigh;
-  if (mh >= 30 && mh <= 70) r.push(`mid & high clouds at ${Math.round(mh)}% ‚Äî wide canvas for color`);
-  else if (mh > 70) r.push(`cloud cover at ${Math.round(mh)}% ‚Äî may be too thick`);
+  if (mh >= 30 && mh <= 70) r.push(`mid & high clouds at ${Math.round(mh)}% -wide canvas for color`);
+  else if (mh > 70) r.push(`cloud cover at ${Math.round(mh)}% -may be too thick`);
   else if (mh < 10) r.push("almost no high clouds to catch light");
   if (w.cloudLow > 50) r.push(`low clouds at ${Math.round(w.cloudLow)}% blocking the horizon`);
-  else if (w.cloudLow <= 15) r.push("clear western horizon ‚Äî clean exit for the sun");
-  if (w.pressureChange > 1) r.push("pressure rising ‚Äî clearing skies");
-  else if (w.pressureChange < -1) r.push("pressure falling ‚Äî system moving in");
+  else if (w.cloudLow <= 15) r.push("clear western horizon -clean exit for the sun");
+  if (w.pressureChange > 1) r.push("pressure rising -clearing skies");
+  else if (w.pressureChange < -1) r.push("pressure falling -system moving in");
   if ((aq.aod || 0) >= 0.08 && (aq.aod || 0) <= 0.3) r.push("light haze scattering warm tones");
   if (w.precip > 0) r.push("precipitation blocking the view");
-  else r.push("dry skies ‚Äî no rain in the way");
+  else r.push("dry skies -no rain in the way");
   if (w.humidity >= 40 && w.humidity <= 65) r.push("moderate humidity adding depth to colors");
   return r.slice(0, 4);
 }
@@ -769,7 +769,7 @@ async function init() {
     render(data);
   } catch(e) {
     console.error(e);
-    document.getElementById('app').innerHTML = '<div class="loading-page"><p style="color:var(--text-mid);font-size:0.9rem;font-weight:300">couldn\'t reach the sky data ‚Äî try refreshing</p><p style="color:var(--text-soft);font-size:0.75rem;font-weight:300">' + e.message + '</p></div>';
+    document.getElementById('app').innerHTML = '<div class="loading-page"><p style="color:var(--text-mid);font-size:0.9rem;font-weight:300">couldn\'t reach the sky data -try refreshing</p><p style="color:var(--text-soft);font-size:0.75rem;font-weight:300">' + e.message + '</p></div>';
   }
 }
 init();
